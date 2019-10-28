@@ -1,0 +1,22 @@
+h1, h3 {
+    color:white;
+}
+
+body {
+    background-image: url('../img/annie.jpg');
+
+
+}
+
+hr {
+    color:white;
+}
+
+#home-content {
+    text-align: center;
+    padding-top: 20%;
+
+}
+.errorlis{
+    color: red;
+}

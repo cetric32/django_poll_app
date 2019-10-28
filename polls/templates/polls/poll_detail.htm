@@ -1,0 +1,56 @@
+{% extends 'base.htm' %}
+
+{% block content %}
+<div class="container m-4">
+    <p>
+        {{poll}} - {{poll.num_votes}} votes
+    </p>
+        {% if messages %}
+                        {% for message in messages %}
+                            <div {% if message.tags%} class="{{message.tags}}" {% endif %}>
+                                    {{message}}
+                                    <button type="button" class="close" data-dismiss='alert' aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                    </button>
+                            </div>
+                        {% endfor %}
+        {% endif %}
+    
+        <form action="{% url 'polls:vote' poll.id %}" method="POST">
+            {% csrf_token %}
+    
+            {% for choice in poll.choice_set.all %}
+                <input type="radio"
+                    name="choice" 
+                    id="choice{{ forloop.counter }}"
+                    value="{{ choice.id }}">
+                <label for="choice{{ forloop.counter }}">{{ choice.choice_text }} - {{ choice.num_votes }}</label>
+                <br>           
+    
+            {% endfor %}
+            
+            <input type="submit"
+                  class="btn btn-primary mb-2"
+                   value="Vote"
+                   {% if not user_can_vote %}
+                    disabled
+                   {% endif %}>                   
+        </form>
+        {% if not  user_can_vote %}
+            <div class="row">
+                <div class="col-sm-6">
+                        {% for choice_dict in results %}
+                        {{ choice_dict.text }}
+                        <div class="progress m-1">
+                                <div class="progress-bar" role="progressbar" style="width:{{ choice_dict.percentage }}%;" > {{choice_dict.num_votes}}</div>
+                        </div>                
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <p>Vote to see results!</p>
+        {% endif %}
+        
+</div>
+{% endblock %}
+
